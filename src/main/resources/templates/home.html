@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Poems 🌜</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<div class="logo">🌜 Crescent Moon Poems</div>
+
+<div class="container">
+    <h2>🩶 My Poems</h2>
+
+    <div class="poem-list">
+        <div class="poem-card" th:each="poem : ${poems}">
+            <h3 th:text="${poem.title}"></h3>
+            <p th:text="${poem.content}"></p>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <a href="/write" class="link-btn big-btn">✍ Start Journey</a>
+        <a href="/logout" class="link-btn">🚪 Logout</a>
+    </div>
+</div>
+
+</body>
+</html>
