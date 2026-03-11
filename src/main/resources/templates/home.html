@@ -5,24 +5,45 @@
     <title>My Poems 🌜</title>
     <link rel="stylesheet" href="/style.css">
 </head>
+
 <body>
 
 <div class="logo">🌜 Crescent Moon Poems</div>
 
 <div class="container">
+
     <h2>🩶 My Poems</h2>
 
     <div class="poem-list">
+
         <div class="poem-card" th:each="poem : ${poems}">
+
             <h3 th:text="${poem.title}"></h3>
+
             <p th:text="${poem.content}"></p>
+
+            <!-- Download Button -->
+            <a th:href="@{/download(title=${poem.title},content=${poem.content})}"
+               class="link-btn">
+               ⬇ Download Poem
+            </a>
+
         </div>
+
     </div>
 
     <div class="btn-group">
-        <a href="/write" class="link-btn big-btn">✍ Start Journey</a>
-        <a href="/logout" class="link-btn">🚪 Logout</a>
+
+        <a href="/write" class="link-btn big-btn">
+            ✍ Start Journey
+        </a>
+
+        <a href="/logout" class="link-btn">
+            🚪 Logout
+        </a>
+
     </div>
+
 </div>
 
 </body>

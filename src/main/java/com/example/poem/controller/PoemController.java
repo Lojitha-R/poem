@@ -2,9 +2,14 @@ package com.example.poem.controller;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -115,7 +120,7 @@ public class PoemController {
         return "write";
     }
 
-    // ================= SAVE POEM (DB + TEXT FILE) =================
+    // ================= SAVE POEM =================
     @PostMapping("/save")
     public String savePoem(@RequestParam String title,
                            @RequestParam String poem,
@@ -135,8 +140,9 @@ public class PoemController {
 
         poemRepo.save(p);
 
-        // Save as text file
+        // Save as text file in server folder
         try {
+
             String folderPath = "poems";
 
             File folder = new File(folderPath);
@@ -144,7 +150,6 @@ public class PoemController {
                 folder.mkdir();
             }
 
-            // Safe file name
             String fileName = title.replaceAll("[^a-zA-Z0-9]", "_") + ".txt";
 
             File file = new File(folderPath + "/" + fileName);
@@ -160,6 +165,26 @@ public class PoemController {
         }
 
         return "redirect:/success";
+    }
+
+    // ================= DOWNLOAD POEM =================
+    @GetMapping("/download")
+    public ResponseEntity<ByteArrayResource> downloadPoem(
+            @RequestParam String title,
+            @RequestParam String content) {
+
+        String fileContent = "Title: " + title + "\n\n" + content;
+
+        byte[] data = fileContent.getBytes(StandardCharsets.UTF_8);
+
+        ByteArrayResource resource = new ByteArrayResource(data);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=" + title.replaceAll("[^a-zA-Z0-9]", "_") + ".txt")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .contentLength(data.length)
+                .body(resource);
     }
 
     // ================= SUCCESS PAGE =================
